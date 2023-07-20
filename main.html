@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+</head>
+<body>
+  <p>Waiting 2 seconds to load data:</p>
+  <div>/: <span id="show-/"></span></div>
+  <div>/data.json: <span id="show-/data.json"></span></div>
+  <script>
+    for (const url of ["/", "/data.json"]) {
+      setTimeout(async function() {
+      const data = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+        },
+        // Mode and credentials match crossorigin=anonymous in link preload header.
+        mode: "cors",
+        credentials: "same-origin",
+        referrer: document.location.href,
+        referrerPolicy: "strict-origin-when-cross-origin",
+      }).then(async (response) => JSON.stringify(await response.json())).catch((error) => ""+error);
+      document.getElementById("show-"+url).innerText = data;
+    }, 2000);
+    }
+  </script>
+</body>
+</html>
